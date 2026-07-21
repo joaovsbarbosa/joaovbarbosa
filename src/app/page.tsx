@@ -10,7 +10,7 @@ export default function Home() {
 
       <Timeline entries={timelineEntries} />
 
-      <section className="mx-auto w-full max-w-md px-6 py-24 text-center">
+      <section className="relative z-20 mx-auto w-full max-w-md bg-background px-6 py-24 text-center">
         <div className="rounded-3xl bg-accent-soft/60 px-6 py-10">
           <p className="font-display text-2xl italic leading-snug text-foreground">
             {timelineOutro}

@@ -27,8 +27,8 @@ export const timelineEntries: TimelineEntry[] = [
     image: "/timeline/05-primeira-visita.jpg",
   },
   {
-    caption: "E, finalmente, a entrega das chaves",
-    // falta a foto da entrega das chaves — manda quando puder
+    caption: "E, finalmente, a entrega das chaves!",
+    image: "/timeline/06-entrega-das-chaves.jpg",
   },
 ];
 
