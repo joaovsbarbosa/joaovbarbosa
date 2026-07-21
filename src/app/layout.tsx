@@ -16,7 +16,7 @@ const displayFont = Fraunces({
 });
 
 export const metadata: Metadata = {
-  title: `${siteConfig.eventTitle} — ${siteConfig.hostNames}`,
+  title: `${siteConfig.eventTitle} | ${siteConfig.hostNames}`,
   description: siteConfig.introText,
 };
 
