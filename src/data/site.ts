@@ -5,7 +5,7 @@ export const siteConfig = {
   eventDate: "Data a definir",
   eventAddress: "Av. Prof. Francisco Morato, 2802 - Conexão Morato",
   introText:
-    "Depois de muitos meses de obra, o apê finalmente ficou pronto! Queremos comemorar essa conquista com vocês.",
+    "Depois de muitos meses de obra, o apê finalmente ficou pronto! Quero comemorar essa conquista com vocês.",
   giftsIntro:
-    "Se quiser nos ajudar a montar a casa nova, escolha um presente da lista abaixo ou contribua com qualquer valor via Pix.",
+    "Se quiser me ajudar a montar a casa nova, escolha um presente da lista abaixo ou contribua com qualquer valor via Pix.",
 };

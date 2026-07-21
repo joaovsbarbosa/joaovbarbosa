@@ -90,7 +90,7 @@ export default function MoneyGiftForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           type="text"
-          placeholder="Como podemos te reconhecer?"
+          placeholder="Como posso te reconhecer?"
           className="rounded-xl border border-foreground/15 bg-card px-4 py-3 text-base text-foreground outline-none focus:border-accent"
         />
       </label>

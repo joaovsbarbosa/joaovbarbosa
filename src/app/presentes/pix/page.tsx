@@ -16,7 +16,7 @@ export default function PixContributionPage() {
         Contribuir com um valor
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-foreground/70">
-        Prefere nos ajudar com o valor que achar melhor, sem escolher um item
+        Prefere me ajudar com o valor que achar melhor, sem escolher um item
         específico? Fica à vontade!
       </p>
 
