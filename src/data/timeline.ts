@@ -6,12 +6,30 @@ export type TimelineEntry = {
 
 // Substitua "image" pelas fotos reais, em ordem. Coloque os arquivos em /public/timeline/.
 export const timelineEntries: TimelineEntry[] = [
-  { caption: "A casa nova chegou, mas esse sonho começou lá em 2022..." },
-  { caption: "Até que o prédio começou a subir..." },
-  { caption: "E foi subindo..." },
-  { caption: "Até que subiu por completo! Mas, e a pintura?" },
-  { caption: "Com tudo se ajeitando, foi hora de fazer a primeira visita ao meu ap!" },
-  { caption: "E, finalmente, a entrega das chaves" },
+  {
+    caption: "A casa nova chegou, mas esse sonho começou lá em 2022...",
+    image: "/timeline/01-terreno.jpg",
+  },
+  {
+    caption: "Até que o prédio começou a subir...",
+    image: "/timeline/02-comecando-a-subir.jpg",
+  },
+  {
+    caption: "E foi subindo...",
+    image: "/timeline/03-subindo.jpg",
+  },
+  {
+    caption: "Até que subiu por completo!",
+    image: "/timeline/04-estrutura-pronta.jpg",
+  },
+  {
+    caption: "Com tudo se ajeitando, foi hora de fazer a primeira visita ao meu ap!",
+    image: "/timeline/05-primeira-visita.jpg",
+  },
+  {
+    caption: "E, finalmente, a entrega das chaves",
+    // falta a foto da entrega das chaves — manda quando puder
+  },
 ];
 
 export const timelineOutro =
