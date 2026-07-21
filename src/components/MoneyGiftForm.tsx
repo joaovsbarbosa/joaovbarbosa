@@ -10,10 +10,13 @@ export default function MoneyGiftForm({
   pixKey,
   pixOwnerName,
   cardEnabled,
+  fixedAmount,
 }: {
   pixKey: string;
   pixOwnerName: string;
   cardEnabled: boolean;
+  /** Quando definido, o valor é fixo (ex: vindo de um vale) e o campo de valor não aparece. */
+  fixedAmount?: number;
 }) {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
@@ -24,7 +27,7 @@ export default function MoneyGiftForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const value = Number(amount.replace(",", "."));
+    const value = fixedAmount ?? Number(amount.replace(",", "."));
     if (!name.trim()) {
       setError("Digite seu nome");
       return;
@@ -64,7 +67,7 @@ export default function MoneyGiftForm({
   }
 
   if (done) {
-    const value = Number(amount.replace(",", "."));
+    const value = fixedAmount ?? Number(amount.replace(",", "."));
     return (
       <div className="mt-6">
         <p className="mb-4 text-sm text-foreground/70">
@@ -92,17 +95,26 @@ export default function MoneyGiftForm({
         />
       </label>
 
-      <label className="flex flex-col gap-1 text-sm text-foreground/70">
-        Valor
-        <input
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          type="text"
-          inputMode="decimal"
-          placeholder="Ex: 100"
-          className="rounded-xl border border-foreground/15 bg-card px-4 py-3 text-base text-foreground outline-none focus:border-accent"
-        />
-      </label>
+      {fixedAmount ? (
+        <div className="flex flex-col gap-1 text-sm text-foreground/70">
+          Valor
+          <p className="rounded-xl border border-foreground/15 bg-card px-4 py-3 text-base font-semibold text-foreground">
+            {formatBRL(fixedAmount)}
+          </p>
+        </div>
+      ) : (
+        <label className="flex flex-col gap-1 text-sm text-foreground/70">
+          Valor
+          <input
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            type="text"
+            inputMode="decimal"
+            placeholder="Ex: 100"
+            className="rounded-xl border border-foreground/15 bg-card px-4 py-3 text-base text-foreground outline-none focus:border-accent"
+          />
+        </label>
+      )}
 
       <fieldset className="flex flex-col gap-2">
         <legend className="mb-1 text-sm text-foreground/70">
@@ -142,7 +154,11 @@ export default function MoneyGiftForm({
         disabled={loading}
         className="mt-2 inline-flex items-center justify-center rounded-full bg-accent px-8 py-3 text-sm font-semibold text-white shadow-sm transition-transform active:scale-95 disabled:opacity-60"
       >
-        {loading ? "Processando..." : "Confirmar contribuição"}
+        {loading
+          ? "Processando..."
+          : fixedAmount
+            ? `Confirmar - ${formatBRL(fixedAmount)}`
+            : "Confirmar contribuição"}
       </button>
     </form>
   );
