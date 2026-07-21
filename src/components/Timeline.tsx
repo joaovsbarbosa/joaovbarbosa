@@ -10,7 +10,7 @@ function TimelineImage({ entry }: { entry: TimelineEntry }) {
     return (
       <Image
         src={entry.image}
-        alt={entry.title}
+        alt={entry.caption}
         fill
         sizes="(min-width: 448px) 448px, 100vw"
         className="object-cover"
@@ -44,7 +44,7 @@ export default function Timeline({ entries }: { entries: TimelineEntry[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
-    offset: ["start 0.8", "end 0.5"],
+    offset: ["start 0.85", "end 0.5"],
   });
   const lineProgress = useSpring(scrollYProgress, {
     stiffness: 90,
@@ -54,42 +54,31 @@ export default function Timeline({ entries }: { entries: TimelineEntry[] }) {
 
   return (
     <div ref={containerRef} className="relative mx-auto max-w-md px-6">
-      {/* trilho de fundo */}
-      <div className="absolute left-[27px] top-2 bottom-2 w-px bg-accent-soft" />
-      {/* trilho preenchido conforme o scroll */}
+      <div className="absolute left-[7px] top-2 bottom-2 w-px bg-accent-soft" />
       <motion.div
-        className="absolute left-[27px] top-2 w-px origin-top bg-accent"
+        className="absolute left-[7px] top-2 w-px origin-top bg-accent"
         style={{ scaleY: lineProgress, height: "calc(100% - 1rem)" }}
       />
 
-      <ol className="flex flex-col gap-14">
+      <ol className="flex flex-col gap-16">
         {entries.map((entry, i) => (
           <motion.li
-            key={`${entry.date}-${i}`}
+            key={i}
             initial={{ opacity: 0, y: 28 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.4 }}
             transition={{ duration: 0.55, ease: "easeOut" }}
-            className="relative pl-14"
+            className="relative pl-8"
           >
-            <span className="absolute left-[19px] top-1.5 z-10 flex h-4 w-4 items-center justify-center rounded-full border-2 border-accent bg-background" />
+            <span className="absolute left-0 top-1.5 z-10 flex h-3.5 w-3.5 items-center justify-center rounded-full border-2 border-accent bg-background" />
 
-            <span className="mb-2 inline-block rounded-full bg-accent-soft px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
-              {entry.date}
-            </span>
+            <p className="mb-3 font-display text-xl italic leading-snug text-foreground">
+              {entry.caption}
+            </p>
 
-            <div className="relative mb-3 aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
+            <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/5">
               <TimelineImage entry={entry} />
             </div>
-
-            <h3 className="font-display text-xl text-foreground">
-              {entry.title}
-            </h3>
-            {entry.description && (
-              <p className="mt-1 text-sm leading-relaxed text-foreground/70">
-                {entry.description}
-              </p>
-            )}
           </motion.li>
         ))}
       </ol>
