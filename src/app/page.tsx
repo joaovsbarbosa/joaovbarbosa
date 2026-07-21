@@ -10,18 +10,16 @@ export default function Home() {
 
       <Timeline entries={timelineEntries} />
 
-      <section className="relative z-20 mx-auto w-full max-w-md bg-background px-6 py-24 text-center">
-        <div className="rounded-3xl bg-accent-soft/60 px-6 py-10">
-          <p className="font-display text-2xl italic leading-snug text-foreground">
-            {timelineOutro}
-          </p>
-          <Link
-            href="/presentes"
-            className="mt-6 inline-flex items-center justify-center rounded-full bg-accent px-8 py-3 text-sm font-semibold text-white shadow-sm transition-transform active:scale-95"
-          >
-            Ver lista de presentes
-          </Link>
-        </div>
+      <section className="sticky top-0 z-20 flex h-[100svh] w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-background via-background to-accent-soft px-6 text-center">
+        <p className="font-display text-3xl italic leading-snug text-foreground">
+          {timelineOutro}
+        </p>
+        <Link
+          href="/presentes"
+          className="mt-8 inline-flex items-center justify-center rounded-full bg-accent px-8 py-3 text-sm font-semibold text-white shadow-sm transition-transform active:scale-95"
+        >
+          Ver lista de presentes
+        </Link>
       </section>
     </main>
   );
