@@ -8,11 +8,9 @@ export default function Home() {
     <main className="flex flex-1 flex-col">
       <Hero />
 
-      <div className="pt-4">
-        <Timeline entries={timelineEntries} />
-      </div>
+      <Timeline entries={timelineEntries} />
 
-      <section className="mx-auto mt-16 w-full max-w-md px-6 pb-24 text-center">
+      <section className="mx-auto w-full max-w-md px-6 py-24 text-center">
         <div className="rounded-3xl bg-accent-soft/60 px-6 py-10">
           <p className="font-display text-2xl italic leading-snug text-foreground">
             {timelineOutro}
