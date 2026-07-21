@@ -1,7 +1,4 @@
-"use client";
-
 import Image from "next/image";
-import { motion } from "framer-motion";
 import type { TimelineEntry } from "@/data/timeline";
 
 function TimelineImage({ entry }: { entry: TimelineEntry }) {
@@ -48,32 +45,17 @@ export default function Timeline({ entries }: { entries: TimelineEntry[] }) {
           className="sticky top-0 h-[100svh] w-full overflow-hidden"
           style={{ zIndex: i + 1 }}
         >
-          <motion.div
-            className="absolute inset-0"
-            initial={{ scale: 1.12 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true, amount: 0.5 }}
-            transition={{ duration: 1.4, ease: "easeOut" }}
-          >
+          <div className="absolute inset-0">
             <TimelineImage entry={entry} />
-          </motion.div>
+          </div>
 
           <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/5 to-black/40" />
 
-          <motion.div
-            initial={{ opacity: 0, y: -14 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.9 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="absolute inset-x-0 top-0 px-6 pt-14"
-          >
-            <span className="mb-2 block text-xs font-semibold uppercase tracking-[0.25em] text-white/50">
-              {String(i + 1).padStart(2, "0")} / {String(entries.length).padStart(2, "0")}
-            </span>
+          <div className="absolute inset-x-0 top-0 px-6 pt-14">
             <p className="font-display text-2xl italic leading-snug text-white">
               {entry.caption}
             </p>
-          </motion.div>
+          </div>
         </div>
       ))}
     </div>
