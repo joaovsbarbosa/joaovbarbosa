@@ -64,34 +64,27 @@ export default async function PresentesPage() {
             Ou escolha algo específico
           </h2>
 
-          <ul className="mt-4 flex flex-col gap-4">
+          <ul className="mt-4 grid grid-cols-2 gap-3">
             {items.map((item) => {
               const disponivel = item.status === "DISPONIVEL";
               return (
                 <li key={item.id}>
                   <Link
                     href={`/presentes/${item.id}`}
-                    className={`flex items-center gap-4 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-black/5 transition-opacity ${
+                    className={`flex h-full flex-col gap-2 rounded-2xl bg-card p-4 shadow-sm ring-1 ring-black/5 transition-opacity ${
                       disponivel ? "" : "opacity-50"
                     }`}
                   >
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-medium text-foreground">
-                        {item.name}
-                      </p>
-                      {item.description && (
-                        <p className="truncate text-sm text-foreground/60">
-                          {item.description}
-                        </p>
-                      )}
-                      {item.price != null && (
-                        <p className="mt-1 text-sm font-semibold text-accent">
-                          {formatBRL(item.price)}
-                        </p>
-                      )}
-                    </div>
+                    <span className="font-medium leading-snug text-foreground">
+                      {item.name}
+                    </span>
+                    {item.price != null && (
+                      <span className="text-sm font-semibold text-accent">
+                        {formatBRL(item.price)}
+                      </span>
+                    )}
                     <span
-                      className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+                      className={`mt-auto inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold ${
                         disponivel
                           ? "bg-accent-soft text-accent"
                           : "bg-foreground/10 text-foreground/50"

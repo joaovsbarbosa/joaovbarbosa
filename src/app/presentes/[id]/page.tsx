@@ -47,8 +47,8 @@ export default async function GiftItemPage({
       )}
       {item.referenceUrl && (
         <p className="mt-2 text-xs text-foreground/50">
-          Pode comprar em outro lugar, desde que seja este produto (ou
-          equivalente).
+          Pode comprar em outro marketplace, mas precisa ser exatamente este
+          produto.
         </p>
       )}
 
