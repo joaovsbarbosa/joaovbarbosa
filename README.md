@@ -58,10 +58,30 @@ Abra [http://localhost:3000](http://localhost:3000).
 Local usa SQLite (arquivo `dev.db`). Hospedagem serverless (Vercel) não
 mantém arquivos entre requisições, então em produção use um banco real e
 gratuito compatível com o adapter LibSQL já configurado, por exemplo o
-[Turso](https://turso.tech) (free tier). Defina `DATABASE_URL` (e
-`DATABASE_AUTH_TOKEN`, se aplicável) nas variáveis de ambiente da hospedagem
-e rode `npx prisma migrate deploy` apontando pra esse banco antes do primeiro
-deploy.
+[Turso](https://turso.tech) (free tier). Defina `DATABASE_URL` e
+`DATABASE_AUTH_TOKEN` nas variáveis de ambiente da hospedagem.
+
+**Importante**: `prisma migrate deploy` não reconhece URLs `libsql://` (só o
+Prisma Client, através do driver adapter, entende esse formato — o motor de
+migração do Prisma, não). Por isso, pra aplicar as migrações num banco Turso,
+use o script deste projeto em vez do comando padrão:
+
+```bash
+DATABASE_URL="libsql://seu-banco.turso.io" \
+DATABASE_AUTH_TOKEN="seu-token" \
+npm run db:migrate:remote
+```
+
+Ele aplica as migrações direto (usando o mesmo driver do app) e registra cada
+uma na tabela `_prisma_migrations`, então dá pra rodar de novo com segurança
+sempre que uma migração nova for criada — só as novas são aplicadas. Depois,
+popule os itens com o mesmo par de variáveis:
+
+```bash
+DATABASE_URL="libsql://seu-banco.turso.io" \
+DATABASE_AUTH_TOKEN="seu-token" \
+npm run db:seed
+```
 
 ## Deploy
 
