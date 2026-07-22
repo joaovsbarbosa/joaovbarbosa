@@ -43,9 +43,13 @@ export default function PixDisplay({
           {amountLabel}
         </p>
       )}
-      <p className="mt-3 break-all rounded-xl bg-card px-4 py-3 font-mono text-sm text-foreground">
+      <button
+        type="button"
+        onClick={copy}
+        className="mt-3 block w-full break-all rounded-xl bg-card px-4 py-3 text-left font-mono text-sm text-foreground transition-transform active:scale-95"
+      >
         {pixKey}
-      </p>
+      </button>
       <button
         type="button"
         onClick={copy}

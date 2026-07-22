@@ -36,8 +36,8 @@ export async function createPaymentLink(params: {
     throw new Error(`InfinitePay createPaymentLink falhou: ${res.status} ${body}`);
   }
 
-  const data = (await res.json()) as Record<string, unknown>;
-  const url = findCheckoutUrl(data);
+  const data = (await res.json()) as { url?: string };
+  const url = data.url ?? findCheckoutUrl(data);
 
   if (!url) {
     throw new Error(
@@ -48,10 +48,10 @@ export async function createPaymentLink(params: {
   return { url };
 }
 
-/** Procura, em qualquer nível do objeto, um valor que seja uma URL de checkout
- * da InfinitePay — evita depender de adivinhar o nome exato do campo. */
+/** Fallback: procura em qualquer nível do objeto por uma URL de checkout da
+ * InfinitePay, caso o campo "url" documentado não venha preenchido. */
 function findCheckoutUrl(value: unknown): string | undefined {
-  if (typeof value === "string" && value.startsWith("https://checkout.infinitepay.io/")) {
+  if (typeof value === "string" && value.includes("checkout.infinitepay.")) {
     return value;
   }
   if (value && typeof value === "object") {
