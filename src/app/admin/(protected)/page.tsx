@@ -1,8 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { formatBRL } from "@/lib/format";
 import {
-  confirmReservation,
-  cancelReservation,
   confirmMoneyGift,
   resetItemToAvailable,
   addGiftItem,
@@ -12,37 +10,24 @@ import {
 export const dynamic = "force-dynamic";
 
 export default async function AdminDashboard() {
-  const [pendingReservations, pendingMoneyGifts, items, confirmedTotals] =
-    await Promise.all([
-      prisma.reservation.findMany({
-        where: { status: "PENDENTE", method: "PIX_MANUAL" },
-        include: { giftItem: true },
-        orderBy: { createdAt: "asc" },
-      }),
-      prisma.moneyGift.findMany({
-        where: { status: "PENDENTE", method: "PIX_MANUAL" },
-        orderBy: { createdAt: "asc" },
-      }),
-      prisma.giftItem.findMany({ orderBy: { name: "asc" } }),
-      prisma.$transaction([
-        prisma.reservation.aggregate({
-          where: { status: "CONFIRMADO" },
-          _sum: { amount: true },
-        }),
-        prisma.moneyGift.aggregate({
-          where: { status: "CONFIRMADO" },
-          _sum: { amount: true },
-        }),
-      ]),
-    ]);
+  const [pendingMoneyGifts, items, confirmedTotal] = await Promise.all([
+    prisma.moneyGift.findMany({
+      where: { status: "PENDENTE", method: "PIX_MANUAL" },
+      orderBy: { createdAt: "asc" },
+    }),
+    prisma.giftItem.findMany({ orderBy: { name: "asc" } }),
+    prisma.moneyGift.aggregate({
+      where: { status: "CONFIRMADO" },
+      _sum: { amount: true },
+    }),
+  ]);
 
-  const totalArrecadado =
-    (confirmedTotals[0]._sum.amount ?? 0) + (confirmedTotals[1]._sum.amount ?? 0);
+  const totalArrecadado = confirmedTotal._sum.amount ?? 0;
 
   return (
     <div className="flex flex-col gap-10">
       <section className="rounded-2xl bg-accent-soft/60 p-5">
-        <p className="text-sm text-foreground/60">Total confirmado</p>
+        <p className="text-sm text-foreground/60">Total confirmado (vales e contribuições)</p>
         <p className="font-display text-3xl italic text-foreground">
           {formatBRL(totalArrecadado)}
         </p>
@@ -50,45 +35,7 @@ export default async function AdminDashboard() {
 
       <section>
         <h2 className="mb-3 font-display text-xl italic text-foreground">
-          Pagamentos Pix pendentes — itens
-        </h2>
-        {pendingReservations.length === 0 && (
-          <p className="text-sm text-foreground/50">Nenhum pendente.</p>
-        )}
-        <ul className="flex flex-col gap-3">
-          {pendingReservations.map((r) => (
-            <li
-              key={r.id}
-              className="flex items-center justify-between gap-3 rounded-xl bg-card p-4 shadow-sm ring-1 ring-black/5"
-            >
-              <div className="min-w-0">
-                <p className="truncate font-medium text-foreground">
-                  {r.giftItem.name}
-                </p>
-                <p className="truncate text-sm text-foreground/60">
-                  {r.guestName} · {formatBRL(r.amount)}
-                </p>
-              </div>
-              <div className="flex shrink-0 gap-2">
-                <form action={confirmReservation.bind(null, r.id)}>
-                  <button className="rounded-full bg-accent px-4 py-2 text-xs font-semibold text-white">
-                    Confirmar
-                  </button>
-                </form>
-                <form action={cancelReservation.bind(null, r.id)}>
-                  <button className="rounded-full bg-foreground/10 px-4 py-2 text-xs font-semibold text-foreground/60">
-                    Cancelar
-                  </button>
-                </form>
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section>
-        <h2 className="mb-3 font-display text-xl italic text-foreground">
-          Pagamentos Pix pendentes — contribuições livres
+          Pagamentos Pix pendentes
         </h2>
         {pendingMoneyGifts.length === 0 && (
           <p className="text-sm text-foreground/50">Nenhum pendente.</p>
@@ -130,12 +77,14 @@ export default async function AdminDashboard() {
                   {item.name}
                 </p>
                 <p className="text-sm text-foreground/60">
-                  {formatBRL(item.price)} ·{" "}
-                  {item.status === "DISPONIVEL" ? "Disponível" : "Comprado"}
+                  {item.price != null ? `${formatBRL(item.price)} · ` : ""}
+                  {item.status === "DISPONIVEL"
+                    ? "Disponível"
+                    : `Reservado por ${item.reservedByName}`}
                 </p>
               </div>
               <div className="flex shrink-0 gap-2">
-                {item.status === "COMPRADO" && (
+                {item.status === "RESERVADO" && (
                   <form action={resetItemToAvailable.bind(null, item.id)}>
                     <button className="rounded-full bg-foreground/10 px-4 py-2 text-xs font-semibold text-foreground/60">
                       Reabrir
@@ -172,11 +121,17 @@ export default async function AdminDashboard() {
             className="rounded-xl border border-foreground/15 px-4 py-3 text-base outline-none focus:border-accent"
           />
           <input
+            name="referenceUrl"
+            type="url"
+            placeholder="Link de sugestão de compra (opcional)"
+            className="rounded-xl border border-foreground/15 px-4 py-3 text-base outline-none focus:border-accent"
+          />
+          <input
             name="price"
             type="number"
             step="0.01"
             min="0"
-            placeholder="Preço"
+            placeholder="Preço aproximado (opcional)"
             className="rounded-xl border border-foreground/15 px-4 py-3 text-base outline-none focus:border-accent"
           />
           <button className="rounded-full bg-accent px-6 py-3 text-sm font-semibold text-white">

@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const preference = await createPreference({
       title: "Contribuição - Chá de Casa Nova",
       price: amount,
-      externalReference: `money:${moneyGift.id}`,
+      externalReference: moneyGift.id,
       notificationUrl: `${origin}/api/webhooks/mercadopago`,
       successUrl: `${origin}/presentes/pix?status=sucesso`,
       failureUrl: `${origin}/presentes/pix?status=falha`,

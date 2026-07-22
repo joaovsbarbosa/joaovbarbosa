@@ -12,48 +12,6 @@ export async function logout() {
   redirect("/admin/login");
 }
 
-export async function confirmReservation(reservationId: string) {
-  await prisma.$transaction(async (tx) => {
-    const reservation = await tx.reservation.findUnique({
-      where: { id: reservationId },
-      include: { giftItem: true },
-    });
-    if (!reservation) return;
-    if (reservation.giftItem.status === "COMPRADO" && reservation.status !== "CONFIRMADO") {
-      return;
-    }
-
-    await tx.reservation.update({
-      where: { id: reservation.id },
-      data: { status: "CONFIRMADO" },
-    });
-    await tx.giftItem.update({
-      where: { id: reservation.giftItemId },
-      data: { status: "COMPRADO" },
-    });
-    // outras reservas pendentes do mesmo item ficam obsoletas
-    await tx.reservation.updateMany({
-      where: {
-        giftItemId: reservation.giftItemId,
-        id: { not: reservation.id },
-        status: "PENDENTE",
-      },
-      data: { status: "CANCELADO" },
-    });
-  });
-
-  revalidatePath("/admin");
-  revalidatePath("/presentes");
-}
-
-export async function cancelReservation(reservationId: string) {
-  await prisma.reservation.update({
-    where: { id: reservationId },
-    data: { status: "CANCELADO" },
-  });
-  revalidatePath("/admin");
-}
-
 export async function confirmMoneyGift(moneyGiftId: string) {
   await prisma.moneyGift.update({
     where: { id: moneyGiftId },
@@ -65,7 +23,7 @@ export async function confirmMoneyGift(moneyGiftId: string) {
 export async function resetItemToAvailable(giftItemId: string) {
   await prisma.giftItem.update({
     where: { id: giftItemId },
-    data: { status: "DISPONIVEL" },
+    data: { status: "DISPONIVEL", reservedByName: null },
   });
   revalidatePath("/admin");
   revalidatePath("/presentes");
@@ -74,12 +32,19 @@ export async function resetItemToAvailable(giftItemId: string) {
 export async function addGiftItem(formData: FormData) {
   const name = String(formData.get("name") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
-  const price = Number(formData.get("price"));
+  const referenceUrl = String(formData.get("referenceUrl") ?? "").trim();
+  const priceRaw = String(formData.get("price") ?? "").trim();
+  const price = priceRaw ? Number(priceRaw) : null;
 
-  if (!name || !price || price <= 0) return;
+  if (!name) return;
 
   await prisma.giftItem.create({
-    data: { name, description: description || null, price },
+    data: {
+      name,
+      description: description || null,
+      referenceUrl: referenceUrl || null,
+      price,
+    },
   });
 
   revalidatePath("/admin");
@@ -87,7 +52,6 @@ export async function addGiftItem(formData: FormData) {
 }
 
 export async function deleteGiftItem(giftItemId: string) {
-  await prisma.reservation.deleteMany({ where: { giftItemId } });
   await prisma.giftItem.delete({ where: { id: giftItemId } });
   revalidatePath("/admin");
   revalidatePath("/presentes");

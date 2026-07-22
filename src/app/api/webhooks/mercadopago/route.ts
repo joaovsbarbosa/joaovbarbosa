@@ -39,43 +39,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: true });
   }
 
-  const ref = payment.external_reference;
-
-  if (ref.startsWith("money:")) {
-    const moneyGiftId = ref.slice("money:".length);
-    await prisma.moneyGift.updateMany({
-      where: { id: moneyGiftId, status: { not: "CONFIRMADO" } },
-      data: { status: "CONFIRMADO", mpPaymentId: String(payment.id) },
-    });
-    return NextResponse.json({ ok: true });
-  }
-
-  const reservationId = ref;
-
-  await prisma.$transaction(async (tx) => {
-    const reservation = await tx.reservation.findUnique({
-      where: { id: reservationId },
-      include: { giftItem: true },
-    });
-    if (!reservation || reservation.status === "CONFIRMADO") return;
-
-    if (reservation.giftItem.status === "COMPRADO") {
-      // Outro pagamento já garantiu este item primeiro; sinaliza para revisão manual (estorno).
-      await tx.reservation.update({
-        where: { id: reservation.id },
-        data: { status: "CANCELADO", mpPaymentId: String(payment.id) },
-      });
-      return;
-    }
-
-    await tx.reservation.update({
-      where: { id: reservation.id },
-      data: { status: "CONFIRMADO", mpPaymentId: String(payment.id) },
-    });
-    await tx.giftItem.update({
-      where: { id: reservation.giftItemId },
-      data: { status: "COMPRADO" },
-    });
+  await prisma.moneyGift.updateMany({
+    where: { id: payment.external_reference, status: { not: "CONFIRMADO" } },
+    data: { status: "CONFIRMADO", mpPaymentId: String(payment.id) },
   });
 
   return NextResponse.json({ ok: true });

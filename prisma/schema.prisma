@@ -13,7 +13,6 @@ datasource db {
 enum GiftStatus {
   DISPONIVEL
   RESERVADO
-  COMPRADO
 }
 
 enum PaymentMethod {
@@ -27,43 +26,30 @@ enum PaymentStatus {
   CANCELADO
 }
 
+// Itens específicos: sem pagamento pelo site. O convidado reserva, compra por
+// conta própria (no site sugerido ou equivalente) e entrega pessoalmente.
 model GiftItem {
-  id          String     @id @default(cuid())
-  name        String
-  description String?
-  imageUrl    String?
-  price       Float
-  status      GiftStatus @default(DISPONIVEL)
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
-
-  reservations Reservation[]
+  id             String     @id @default(cuid())
+  name           String
+  description    String?
+  referenceUrl   String?
+  imageUrl       String?
+  price          Float?
+  status         GiftStatus @default(DISPONIVEL)
+  reservedByName String?
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
 }
 
-model Reservation {
-  id            String        @id @default(cuid())
-  giftItem      GiftItem      @relation(fields: [giftItemId], references: [id])
-  giftItemId    String
-  guestName     String
-  guestContact  String?
-  method        PaymentMethod
-  status        PaymentStatus @default(PENDENTE)
-  amount        Float
-  mpPaymentId   String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
-
-  @@index([giftItemId])
-}
-
+// Vales de valor e contribuições livres: pagos pelo site (Pix manual ou cartão).
 model MoneyGift {
-  id            String        @id @default(cuid())
-  guestName     String
-  guestContact  String?
-  method        PaymentMethod
-  status        PaymentStatus @default(PENDENTE)
-  amount        Float
-  mpPaymentId   String?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id           String        @id @default(cuid())
+  guestName    String
+  guestContact String?
+  method       PaymentMethod
+  status       PaymentStatus @default(PENDENTE)
+  amount       Float
+  mpPaymentId  String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }

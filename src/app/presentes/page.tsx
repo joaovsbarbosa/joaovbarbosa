@@ -84,9 +84,11 @@ export default async function PresentesPage() {
                           {item.description}
                         </p>
                       )}
-                      <p className="mt-1 text-sm font-semibold text-accent">
-                        {formatBRL(item.price)}
-                      </p>
+                      {item.price != null && (
+                        <p className="mt-1 text-sm font-semibold text-accent">
+                          {formatBRL(item.price)}
+                        </p>
+                      )}
                     </div>
                     <span
                       className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
