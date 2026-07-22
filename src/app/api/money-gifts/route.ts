@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { createPreference } from "@/lib/mercadopago";
+import { createPaymentLink } from "@/lib/infinitepay";
 import { isCardPaymentEnabled } from "@/lib/payments";
 
 export async function POST(req: NextRequest) {
@@ -8,14 +8,14 @@ export async function POST(req: NextRequest) {
   const { guestName, guestContact, method, amount } = body as {
     guestName?: string;
     guestContact?: string;
-    method?: "PIX_MANUAL" | "CARTAO_MERCADOPAGO";
+    method?: "PIX_MANUAL" | "CARTAO";
     amount?: number;
   };
 
   if (!guestName || !method || !amount || amount <= 0) {
     return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
   }
-  if (method === "CARTAO_MERCADOPAGO" && !isCardPaymentEnabled()) {
+  if (method === "CARTAO" && !isCardPaymentEnabled()) {
     return NextResponse.json(
       { error: "Pagamento por cartão indisponível no momento" },
       { status: 400 },
@@ -32,19 +32,18 @@ export async function POST(req: NextRequest) {
 
   const origin = req.nextUrl.origin;
   try {
-    const preference = await createPreference({
+    const link = await createPaymentLink({
       title: "Contribuição - Chá de Casa Nova",
       price: amount,
-      externalReference: moneyGift.id,
-      notificationUrl: `${origin}/api/webhooks/mercadopago`,
-      successUrl: `${origin}/presentes/pix?status=sucesso`,
-      failureUrl: `${origin}/presentes/pix?status=falha`,
+      orderNsu: moneyGift.id,
+      redirectUrl: `${origin}/presentes/pix?status=retorno`,
+      webhookUrl: `${origin}/api/webhooks/infinitepay`,
     });
 
     return NextResponse.json({
       moneyGiftId: moneyGift.id,
       method,
-      checkoutUrl: preference.init_point,
+      checkoutUrl: link.url,
     });
   } catch (err) {
     console.error(err);

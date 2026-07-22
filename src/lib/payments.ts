@@ -1,5 +1,5 @@
 export function isCardPaymentEnabled() {
-  return Boolean(process.env.MERCADOPAGO_ACCESS_TOKEN);
+  return Boolean(process.env.INFINITEPAY_HANDLE);
 }
 
 export function getPixInfo() {

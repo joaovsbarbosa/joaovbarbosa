@@ -4,7 +4,7 @@ import { useState } from "react";
 import PixDisplay from "@/components/PixDisplay";
 import { formatBRL } from "@/lib/format";
 
-type Method = "PIX_MANUAL" | "CARTAO_MERCADOPAGO";
+type Method = "PIX_MANUAL" | "CARTAO";
 
 export default function MoneyGiftForm({
   pixKey,
@@ -53,7 +53,7 @@ export default function MoneyGiftForm({
         return;
       }
 
-      if (method === "CARTAO_MERCADOPAGO" && data.checkoutUrl) {
+      if (method === "CARTAO" && data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
         return;
       }
@@ -138,8 +138,8 @@ export default function MoneyGiftForm({
             type="radio"
             name="method"
             disabled={!cardEnabled}
-            checked={method === "CARTAO_MERCADOPAGO"}
-            onChange={() => setMethod("CARTAO_MERCADOPAGO")}
+            checked={method === "CARTAO"}
+            onChange={() => setMethod("CARTAO")}
           />
           <span className="text-sm text-foreground">
             Cartão de crédito {!cardEnabled && "(indisponível)"}

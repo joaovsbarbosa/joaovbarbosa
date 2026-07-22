@@ -17,7 +17,7 @@ enum GiftStatus {
 
 enum PaymentMethod {
   PIX_MANUAL
-  CARTAO_MERCADOPAGO
+  CARTAO
 }
 
 enum PaymentStatus {
@@ -40,15 +40,16 @@ model GiftItem {
   updatedAt    DateTime   @updatedAt
 }
 
-// Vales de valor e contribuições livres: pagos pelo site (Pix manual ou cartão).
+// Vales de valor e contribuições livres: pagos pelo site (Pix manual ou
+// cartão via checkout da InfinitePay).
 model MoneyGift {
-  id           String        @id @default(cuid())
-  guestName    String
-  guestContact String?
-  method       PaymentMethod
-  status       PaymentStatus @default(PENDENTE)
-  amount       Float
-  mpPaymentId  String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id                   String        @id @default(cuid())
+  guestName            String
+  guestContact         String?
+  method               PaymentMethod
+  status               PaymentStatus @default(PENDENTE)
+  amount               Float
+  gatewayTransactionId String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
 }
