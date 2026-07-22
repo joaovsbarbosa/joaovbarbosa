@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
       title: "Contribuição - Chá de Casa Nova",
       price: amount,
       orderNsu: moneyGift.id,
-      redirectUrl: `${origin}/presentes/pix?status=retorno`,
+      redirectUrl: `${origin}/presentes/obrigado`,
       webhookUrl: `${origin}/api/webhooks/infinitepay`,
     });
 
