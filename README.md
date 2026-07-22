@@ -27,7 +27,7 @@ Abra [http://localhost:3000](http://localhost:3000).
      nenhuma taxa).
    - `ADMIN_PASSWORD`: senha do painel `/admin`, onde você confirma
      manualmente os pagamentos Pix e gerencia os itens.
-   - `MERCADOPAGO_ACCESS_TOKEN` / `MERCADOPAGO_PUBLIC_KEY` (opcional): só
+   - `MERCADOPAGO_ACCESS_TOKEN` (opcional): só
      preencha se quiser aceitar cartão de crédito. Sem isso, a opção de
      cartão fica desabilitada automaticamente e só o Pix manual aparece.
      Gere as chaves em https://www.mercadopago.com.br/developers/panel —
