@@ -3,18 +3,15 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { giftItemId, guestName } = body as {
-    giftItemId?: string;
-    guestName?: string;
-  };
+  const { giftItemId } = body as { giftItemId?: string };
 
-  if (!giftItemId || !guestName?.trim()) {
+  if (!giftItemId) {
     return NextResponse.json({ error: "Dados incompletos" }, { status: 400 });
   }
 
   const result = await prisma.giftItem.updateMany({
     where: { id: giftItemId, status: "DISPONIVEL" },
-    data: { status: "RESERVADO", reservedByName: guestName.trim() },
+    data: { status: "RESERVADO" },
   });
 
   if (result.count === 0) {

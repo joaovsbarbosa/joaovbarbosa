@@ -78,9 +78,7 @@ export default async function AdminDashboard() {
                 </p>
                 <p className="text-sm text-foreground/60">
                   {item.price != null ? `${formatBRL(item.price)} · ` : ""}
-                  {item.status === "DISPONIVEL"
-                    ? "Disponível"
-                    : `Reservado por ${item.reservedByName}`}
+                  {item.status === "DISPONIVEL" ? "Disponível" : "Reservado"}
                 </p>
               </div>
               <div className="flex shrink-0 gap-2">

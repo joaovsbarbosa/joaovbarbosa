@@ -26,19 +26,18 @@ enum PaymentStatus {
   CANCELADO
 }
 
-// Itens específicos: sem pagamento pelo site. O convidado reserva, compra por
-// conta própria (no site sugerido ou equivalente) e entrega pessoalmente.
+// Itens específicos: sem pagamento pelo site. O convidado reserva (sem se
+// identificar), compra por conta própria e entrega pessoalmente.
 model GiftItem {
-  id             String     @id @default(cuid())
-  name           String
-  description    String?
-  referenceUrl   String?
-  imageUrl       String?
-  price          Float?
-  status         GiftStatus @default(DISPONIVEL)
-  reservedByName String?
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  id           String     @id @default(cuid())
+  name         String
+  description  String?
+  referenceUrl String?
+  imageUrl     String?
+  price        Float?
+  status       GiftStatus @default(DISPONIVEL)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
 }
 
 // Vales de valor e contribuições livres: pagos pelo site (Pix manual ou cartão).

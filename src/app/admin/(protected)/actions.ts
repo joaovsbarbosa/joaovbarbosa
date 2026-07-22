@@ -23,7 +23,7 @@ export async function confirmMoneyGift(moneyGiftId: string) {
 export async function resetItemToAvailable(giftItemId: string) {
   await prisma.giftItem.update({
     where: { id: giftItemId },
-    data: { status: "DISPONIVEL", reservedByName: null },
+    data: { status: "DISPONIVEL" },
   });
   revalidatePath("/admin");
   revalidatePath("/presentes");
