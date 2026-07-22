@@ -2,8 +2,11 @@ import "dotenv/config";
 import { PrismaClient } from "../src/generated/prisma/client";
 import { PrismaLibSql } from "@prisma/adapter-libsql";
 
+const dbUrl = process.env.DATABASE_URL ?? "file:./dev.db";
+console.log(`Rodando seed contra: ${dbUrl}`);
+
 const adapter = new PrismaLibSql({
-  url: process.env.DATABASE_URL ?? "file:./dev.db",
+  url: dbUrl,
   authToken: process.env.DATABASE_AUTH_TOKEN,
 });
 

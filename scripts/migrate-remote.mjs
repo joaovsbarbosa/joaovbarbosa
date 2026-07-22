@@ -25,6 +25,8 @@ if (url.startsWith("file:")) {
   process.exit(1);
 }
 
+console.log(`Rodando migração contra: ${url}`);
+
 const client = createClient({ url, authToken });
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
